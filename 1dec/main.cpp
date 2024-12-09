@@ -14,14 +14,29 @@ int main()
     std::ranges::sort(l_list);
     std::ranges::sort(r_list);
 
+    // --- Part One ---
     // Sum up the difference of the IDs in respective ascending orders
-    int sum = 0;
+    int distance_total = 0;
     for (int i = 0; i < l_list.size(); ++i)
     {
-        sum += abs(l_list[i] - r_list[i]);
+        distance_total += abs(l_list[i] - r_list[i]);
     }
 
-    std::cout << sum << std::endl;
+    std::cout << "Part One: " << distance_total << std::endl;
+
+    // --- Part Two ---
+    int similarity_score_total = 0;
+    for (const int left : l_list)
+    {
+        int occurs = 0;
+        for (const int right : r_list)
+        {
+            if (left == right) occurs++;
+        }
+        similarity_score_total += left * occurs;
+    }
+
+    std::cout << "Part Two: " << similarity_score_total << std::endl;
 
     return 0;
 }
