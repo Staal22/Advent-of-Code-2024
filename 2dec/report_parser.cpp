@@ -15,7 +15,7 @@ std::vector<std::vector<int>> report_parser::get_reports()
 
     std::vector<std::vector<int>> reports;
 
-    std::ifstream file("reports.txt");
+    std::ifstream file("input.txt");
     std::string line;
     while (std::getline(file, line))
     {
