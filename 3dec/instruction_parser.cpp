@@ -24,7 +24,6 @@ int instruction_parser::sum_multiply_input()
     auto matches_begin = std::sregex_iterator(content.begin(), content.end(), pattern);
     auto matches_end = std::sregex_iterator();
 
-
     // Go through the text (matches) and multiply
     for (std::sregex_iterator i = matches_begin; i != matches_end; ++i)
     {

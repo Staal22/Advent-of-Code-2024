@@ -10,7 +10,6 @@ class instruction_parser
 {
 public:
     static int sum_multiply_input();
-
     static int sum_multiply_input_v2();
 
 };
