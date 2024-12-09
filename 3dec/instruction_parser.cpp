@@ -14,6 +14,33 @@ int instruction_parser::sum_multiply_input()
 
     int sum = 0;
 
+    // Regex pattern to match mul instruction
+    std::regex pattern(R"(mul\((\d+),(\d+)\))");
+
+    std::ifstream file("input.txt");
+    std::string content((std::istreambuf_iterator(file)),
+                        std::istreambuf_iterator<char>());
+
+    auto matches_begin = std::sregex_iterator(content.begin(), content.end(), pattern);
+    auto matches_end = std::sregex_iterator();
+
+
+    // Go through the text (matches) and multiply
+    for (std::sregex_iterator i = matches_begin; i != matches_end; ++i)
+    {
+        const std::smatch& match = *i;
+        int arg1 = std::stoi(match[1]);
+        int arg2 = std::stoi(match[2]);
+        sum += arg1 * arg2;
+    }
+
+    return sum;
+}
+
+int instruction_parser::sum_multiply_input_v2()
+{
+    int sum = 0;
+
     // Regex pattern to match mul instruction or either of the conditionals
     std::regex combined_pattern(R"(mul\((\d+),(\d+)\)|do\(\)|don't\(\))");
 
