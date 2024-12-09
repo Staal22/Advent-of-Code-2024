@@ -14,6 +14,7 @@ int instruction_parser::sum_multiply_input()
 
     int sum = 0;
 
+    // Regex pattern to match mul instruction or either of the conditionals
     std::regex combined_pattern(R"(mul\((\d+),(\d+)\)|do\(\)|don't\(\))");
 
     std::ifstream file("input.txt");
@@ -25,6 +26,7 @@ int instruction_parser::sum_multiply_input()
 
     bool enabled = true;
 
+    // Go through the text (matches) and flip enabled state based on conditionals
     for (std::sregex_iterator i = matches_begin; i != matches_end; ++i)
     {
         const std::smatch& match = *i;
@@ -37,6 +39,7 @@ int instruction_parser::sum_multiply_input()
         {
             enabled = false;
         }
+        // If enabled, do matched multiplication
         else if (match[0].str().find("mul(") != std::string::npos && enabled)
         {
             int arg1 = std::stoi(match[1]);
