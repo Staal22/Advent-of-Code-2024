@@ -9,7 +9,7 @@
 
 std::vector<std::vector<int>> report_parser::get_reports()
 {
-    // format:
+    // Format
     // 19 21 24 27 24
     // 85 87 89 92 93 96 98 98
 

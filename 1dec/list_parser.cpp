@@ -10,7 +10,7 @@
 
 std::pair<std::vector<int>, std::vector<int>> list_parser::get_lists()
 {
-    // format:
+    // Format
     // l       r
     // 77710   11556
     // 22632   23674
