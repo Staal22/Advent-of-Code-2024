@@ -10,13 +10,13 @@
 
 std::pair<std::vector<int>, std::vector<int>> list_parser::get_lists()
 {
-    std::vector<int> l_list;
-    std::vector<int> r_list;
-
     // format:
     // l       r
     // 77710   11556
     // 22632   23674
+
+    std::vector<int> l_list;
+    std::vector<int> r_list;
 
     std::ifstream file("input.txt");
     std::string line;
