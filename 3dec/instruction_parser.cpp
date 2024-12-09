@@ -6,7 +6,6 @@
 #include <fstream>
 #include <string>
 #include <regex>
-#include <set>
 
 int instruction_parser::sum_multiply_input()
 {
@@ -15,62 +14,34 @@ int instruction_parser::sum_multiply_input()
 
     int sum = 0;
 
-    std::regex mul_pattern(R"(mul\((\d+),(\d+)\))");
-    std::regex do_pattern(R"((do\(\)))");
-    std::regex dont_pattern(R"((don't\(\)))");
+    std::regex combined_pattern(R"(mul\((\d+),(\d+)\)|do\(\)|don't\(\))");
 
     std::ifstream file("input.txt");
-    std::string line;
-    while (std::getline(file, line))
+    std::string content((std::istreambuf_iterator(file)),
+                        std::istreambuf_iterator<char>());
+
+    auto matches_begin = std::sregex_iterator(content.begin(), content.end(), combined_pattern);
+    auto matches_end = std::sregex_iterator();
+
+    bool enabled = true;
+
+    for (std::sregex_iterator i = matches_begin; i != matches_end; ++i)
     {
-        // Track all instructions (with data if applicable)
-        std::vector<std::tuple<int, std::string, int, int>> instructions;
+        const std::smatch& match = *i;
 
-        auto collect_instructions = [&](const std::regex& pattern, const std::string& type)
+        if (match[0].str().find("do()") != std::string::npos)
         {
-            auto line_begin = std::sregex_iterator(line.begin(), line.end(), pattern);
-            auto line_end = std::sregex_iterator();
-
-            for (std::sregex_iterator i = line_begin; i != line_end; ++i)
-            {
-                if (type == "mul")
-                {
-                    int arg1 = std::stoi((*i)[1]);
-                    int arg2 = std::stoi((*i)[2]);
-                    instructions.emplace_back(i->position(), type, arg1, arg2);
-                }
-                else
-                {
-                    instructions.emplace_back(i->position(), type, 0, 0);
-                }
-            }
-        };
-
-        collect_instructions(mul_pattern, "mul");
-        collect_instructions(do_pattern, "do");
-        collect_instructions(dont_pattern, "dont");
-
-        // Sort instructions by order of appearance
-        std::ranges::sort(instructions);
-
-        // Track enabled state and process enabled multiplies
-        bool enabled = true;
-        std::set<int> processed_positions;
-
-        for (const auto& [position, type, arg1, arg2]: instructions)
+            enabled = true;
+        }
+        else if (match[0].str().find("don't()") != std::string::npos)
         {
-            if (type == "do")
-                enabled = true;
-            else if (type == "dont")
-                enabled = false;
-            else if (type == "mul" && enabled)
-            {
-                if (processed_positions.insert(position).second) // Only process if not already done
-                {
-                    sum += arg1 * arg2;
-                }
-                // sum += arg1 * arg2;
-            }
+            enabled = false;
+        }
+        else if (match[0].str().find("mul(") != std::string::npos && enabled)
+        {
+            int arg1 = std::stoi(match[1]);
+            int arg2 = std::stoi(match[2]);
+            sum += arg1 * arg2;
         }
     }
 
